@@ -89,26 +89,35 @@ class NameInput:
         overlay.fill((0, 0, 0))
         screen.blit(overlay, (0, 0))
         
-        # 标题
+        # 标题 - 进一步上移
         title_text = self.title_font.render("New High Score!", True, (255, 215, 0))
         title_rect = title_text.get_rect()
         title_rect.centerx = self.screen_rect.centerx
-        title_rect.top = self.screen_rect.centery - 180  # 向上移动更多
+        title_rect.top = self.screen_rect.centery - 220  # 进一步向上移动
         screen.blit(title_text, title_rect)
         
-        # 分数显示
-        score_text = self.font.render(f"Score: {score}  Level: {level}", True, self.text_color)
+        # 分数和等级分别显示 - 分离成两个文本框
+        score_text = self.font.render(f"Score: {score}", True, self.text_color)
         score_rect = score_text.get_rect()
-        score_rect.centerx = self.screen_rect.centerx
-        score_rect.top = title_rect.bottom + 30  # 增加与标题的间距
+        score_rect.centerx = self.screen_rect.centerx - 80  # 左侧位置
+        score_rect.top = title_rect.bottom + 50
         screen.blit(score_text, score_rect)
         
-        # 提示文字
+        level_text = self.font.render(f"Level: {level}", True, self.text_color)
+        level_rect = level_text.get_rect()
+        level_rect.centerx = self.screen_rect.centerx + 80  # 右侧位置
+        level_rect.top = title_rect.bottom + 50
+        screen.blit(level_text, level_rect)
+        
+        # 提示文字 - 上移，减少与分数/等级文本的间距
         name_prompt_text = self.font.render("Enter your name:", True, self.text_color)
         name_prompt_rect = name_prompt_text.get_rect()
         name_prompt_rect.centerx = self.screen_rect.centerx
-        name_prompt_rect.bottom = self.input_box_rect.top - 30  # 增加与输入框的间距
+        name_prompt_rect.top = score_rect.bottom + 50  # 上移，减少间距
         screen.blit(name_prompt_text, name_prompt_rect)
+        
+        # 调整输入框位置，进一步增加与提示文字的间距
+        self.input_box_rect.top = name_prompt_rect.bottom + 50  # 进一步增加与提示文字的间距
         
         # 输入框
         color = self.active_color if self.active else self.box_color
