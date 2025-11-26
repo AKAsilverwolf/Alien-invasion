@@ -6,7 +6,9 @@ class Leaderboard:
     
     def __init__(self, filename="leaderboard.json"):
         """初始化排行榜"""
-        self.filename = filename
+        # 获取当前脚本所在目录，构建绝对路径
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.filename = os.path.join(current_dir, filename)
         self.leaders = []
         self.load_leaderboard()
     

@@ -93,22 +93,22 @@ class NameInput:
         title_text = self.title_font.render("New High Score!", True, (255, 215, 0))
         title_rect = title_text.get_rect()
         title_rect.centerx = self.screen_rect.centerx
-        title_rect.top = self.screen_rect.centery - 150
+        title_rect.top = self.screen_rect.centery - 180  # 向上移动更多
         screen.blit(title_text, title_rect)
         
         # 分数显示
         score_text = self.font.render(f"Score: {score}  Level: {level}", True, self.text_color)
         score_rect = score_text.get_rect()
         score_rect.centerx = self.screen_rect.centerx
-        score_rect.top = title_rect.bottom + 20
+        score_rect.top = title_rect.bottom + 30  # 增加与标题的间距
         screen.blit(score_text, score_rect)
         
         # 提示文字
-        prompt_text = self.font.render("Enter your name:", True, self.text_color)
-        prompt_rect = prompt_text.get_rect()
-        prompt_rect.centerx = self.screen_rect.centerx
-        prompt_rect.bottom = self.input_box_rect.top - 10
-        screen.blit(prompt_text, prompt_rect)
+        name_prompt_text = self.font.render("Enter your name:", True, self.text_color)
+        name_prompt_rect = name_prompt_text.get_rect()
+        name_prompt_rect.centerx = self.screen_rect.centerx
+        name_prompt_rect.bottom = self.input_box_rect.top - 30  # 增加与输入框的间距
+        screen.blit(name_prompt_text, name_prompt_rect)
         
         # 输入框
         color = self.active_color if self.active else self.box_color

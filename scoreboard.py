@@ -95,11 +95,49 @@ class Scoreboard():
     
     def show_leaderboard(self, screen, leaderboard):
         """显示排行榜"""
-        # 半透明背景
-        overlay = pygame.Surface((self.screen_rect.width, self.screen_rect.height))
-        overlay.set_alpha(200)
-        overlay.fill((0, 0, 0))
-        screen.blit(overlay, (0, 0))
+        # 创建一个独立于游戏背景的Surface
+        leaderboard_surface = pygame.Surface((self.screen_rect.width, self.screen_rect.height))
+        leaderboard_surface.fill((10, 10, 30))  # 深蓝色背景
+        
+        # 标题
+        title_text = self.title_font.render("Leaderboard", True, (255, 215, 0))
+        title_rect = title_text.get_rect()
+        title_rect.centerx = self.screen_rect.centerx
+        title_rect.top = 50
+        leaderboard_surface.blit(title_text, title_rect)
+        
+        # 排行榜内容
+        leaders = leaderboard.get_top_scores(5)
+        y_offset = 120
+        
+        for i, leader in enumerate(leaders, 1):
+            # 排名
+            rank_text = self.font.render(f"{i}.", True, (255, 255, 255))
+            leaderboard_surface.blit(rank_text, (self.screen_rect.centerx - 200, y_offset))
+            
+            # 名字
+            name_text = self.font.render(leader['name'], True, (255, 255, 255))
+            leaderboard_surface.blit(name_text, (self.screen_rect.centerx - 150, y_offset))
+            
+            # 分数
+            score_text = self.font.render(f"{leader['score']:,}", True, (255, 255, 255))
+            leaderboard_surface.blit(score_text, (self.screen_rect.centerx + 50, y_offset))
+            
+            # 等级
+            level_text = self.font.render(f"Lv.{leader['level']}", True, (255, 255, 255))
+            leaderboard_surface.blit(level_text, (self.screen_rect.centerx + 200, y_offset))
+            
+            y_offset += 40
+        
+        # 提示文字
+        prompt_text = self.font.render("Press ESC to close", True, (150, 150, 150))
+        prompt_rect = prompt_text.get_rect()
+        prompt_rect.centerx = self.screen_rect.centerx
+        prompt_rect.bottom = self.screen_rect.bottom - 20
+        leaderboard_surface.blit(prompt_text, prompt_rect)
+        
+        # 一次性将整个排行榜界面绘制到屏幕
+        screen.blit(leaderboard_surface, (0, 0))
         
         # 标题
         title_text = self.title_font.render("Leaderboard", True, (255, 215, 0))

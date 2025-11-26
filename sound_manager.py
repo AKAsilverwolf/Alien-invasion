@@ -1,6 +1,7 @@
 import pygame
 import os
 import numpy as np
+from pygame import sndarray
 
 class SoundManager:
     """管理游戏音效的类"""
