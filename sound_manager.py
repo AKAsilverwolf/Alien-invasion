@@ -1,5 +1,6 @@
 import pygame
 import os
+import numpy as np
 
 class SoundManager:
     """管理游戏音效的类"""
@@ -18,82 +19,130 @@ class SoundManager:
         self.create_sounds()
     
     def create_sounds(self):
-        """创建简单的音效"""
+        """创建或加载音效"""
         if not self.enabled:
             return
             
         try:
-            # 创建射击音效
-            self.create_shoot_sound()
-            # 创建爆炸音效
-            self.create_explosion_sound()
-            # 创建游戏结束音效
-            self.create_game_over_sound()
-            print("音效创建成功")
+            # 尝试加载外部音效文件
+            self.load_sound_files()
+            print("音效加载成功")
         except Exception as e:
-            print(f"创建音效时出错: {e}")
-            self.enabled = False
+            print(f"加载音效文件时出错: {e}")
+            print("尝试生成程序化音效...")
+            try:
+                # 如果加载失败，则创建程序化音效
+                self.create_programmed_sounds()
+                print("程序化音效创建成功")
+            except Exception as e2:
+                print(f"创建音效时出错: {e2}")
+                self.enabled = False
     
+    def load_sound_files(self):
+        """加载外部音效文件"""
+        # 获取当前文件所在目录的父目录，然后添加sounds文件夹
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        sounds_dir = os.path.join(current_dir, 'sounds')
+        
+        # 加载射击音效
+        shoot_path = os.path.join(sounds_dir, 'shoot.wav')
+        if os.path.exists(shoot_path):
+            self.sounds['shoot'] = pygame.mixer.Sound(shoot_path)
+            print(f"加载射击音效: {shoot_path}")
+        else:
+            raise FileNotFoundError(f"射击音效文件未找到: {shoot_path}")
+        
+        # 加载爆炸音效
+        explosion_path = os.path.join(sounds_dir, 'explosion.wav')
+        if os.path.exists(explosion_path):
+            self.sounds['explosion'] = pygame.mixer.Sound(explosion_path)
+            print(f"加载爆炸音效: {explosion_path}")
+        else:
+            raise FileNotFoundError(f"爆炸音效文件未找到: {explosion_path}")
+        
+        # 生成游戏结束音效（因为没有对应的文件）
+        self.create_game_over_sound()
+
+    def create_programmed_sounds(self):
+        """创建程序化音效（备用方案）"""
+        self.create_shoot_sound()
+        self.create_explosion_sound()
+        self.create_game_over_sound()
+
     def create_shoot_sound(self):
-        """创建射击音效"""
-        # 创建一个简单的射击声
-        duration = 0.1  # 持续时间（秒）
-        sample_rate = 22050
-        samples = int(duration * sample_rate)
-        
-        # 生成音波数据
-        waves = []
-        for i in range(samples):
-            t = float(i) / sample_rate
-            # 使用多个频率创建更丰富的声音
-            value = (int(32767.0 * 0.3 * (
-                0.6 * pygame.math.Vector2(0, 1).rotate(360 * 200 * t).y +
-                0.4 * pygame.math.Vector2(0, 1).rotate(360 * 400 * t).y
-            )) * (1 - t/duration))  # 淡出效果
-            waves.append([value, value])
-        
-        # 创建声音对象
-        sound = pygame.sndarray.make_sound(waves)
-        self.sounds['shoot'] = sound
+        """创建射击音效（备用方案）"""
+        # 使用更简单的音效生成方法
+        try:
+            duration = 0.1  # 持续时间（秒）
+            sample_rate = 22050
+            samples = int(duration * sample_rate)
+            
+            # 生成音波数据
+            waves = np.zeros((samples, 2), dtype=np.int16)
+            for i in range(samples):
+                t = float(i) / sample_rate
+                # 使用多个频率创建更丰富的声音
+                value = int(32767.0 * 0.3 * (
+                    0.6 * np.sin(2 * np.pi * 200 * t) +
+                    0.4 * np.sin(2 * np.pi * 400 * t)
+                ) * (1 - t/duration))  # 淡出效果
+                waves[i] = [value, value]
+            
+            # 创建声音对象
+            sound = pygame.sndarray.make_sound(waves)
+            self.sounds['shoot'] = sound
+        except Exception as e:
+            print(f"创建射击音效失败: {e}")
+            # 创建一个简单的默认音效
+            self.sounds['shoot'] = None
     
     def create_explosion_sound(self):
-        """创建爆炸音效"""
-        duration = 0.3
-        sample_rate = 22050
-        samples = int(duration * sample_rate)
-        
-        waves = []
-        import random
-        random.seed(42)
-        
-        for i in range(samples):
-            t = float(i) / sample_rate
-            # 创建噪音加上低频
-            noise = random.uniform(-1, 1)
-            low_freq = pygame.math.Vector2(0, 1).rotate(360 * 60 * t).y
-            value = int(32767.0 * 0.4 * (noise * 0.7 + low_freq * 0.3) * (1 - t/duration))
-            waves.append([value, value])
-        
-        sound = pygame.sndarray.make_sound(waves)
-        self.sounds['explosion'] = sound
+        """创建爆炸音效（备用方案）"""
+        try:
+            duration = 0.3
+            sample_rate = 22050
+            samples = int(duration * sample_rate)
+            
+            waves = np.zeros((samples, 2), dtype=np.int16)
+            np.random.seed(42)
+            
+            for i in range(samples):
+                t = float(i) / sample_rate
+                # 创建噪音加上低频
+                noise = np.random.uniform(-1, 1)
+                low_freq = np.sin(2 * np.pi * 60 * t)
+                value = int(32767.0 * 0.4 * (noise * 0.7 + low_freq * 0.3) * (1 - t/duration))
+                waves[i] = [value, value]
+            
+            sound = pygame.sndarray.make_sound(waves)
+            self.sounds['explosion'] = sound
+        except Exception as e:
+            print(f"创建爆炸音效失败: {e}")
+            # 创建一个简单的默认音效
+            self.sounds['explosion'] = None
     
     def create_game_over_sound(self):
-        """创建游戏结束音效"""
-        duration = 0.8
-        sample_rate = 22050
-        samples = int(duration * sample_rate)
-        
-        waves = []
-        
-        for i in range(samples):
-            t = float(i) / sample_rate
-            # 下降音调
-            freq = 400 * (1 - t/duration)
-            value = int(32767.0 * 0.3 * pygame.math.Vector2(0, 1).rotate(360 * freq * t).y)
-            waves.append([value, value])
-        
-        sound = pygame.sndarray.make_sound(waves)
-        self.sounds['game_over'] = sound
+        """创建游戏结束音效（备用方案）"""
+        try:
+            duration = 0.8
+            sample_rate = 22050
+            samples = int(duration * sample_rate)
+            
+            waves = np.zeros((samples, 2), dtype=np.int16)
+            
+            for i in range(samples):
+                t = float(i) / sample_rate
+                # 下降音调
+                freq = 400 * (1 - t/duration)
+                value = int(32767.0 * 0.3 * np.sin(2 * np.pi * freq * t))
+                waves[i] = [value, value]
+            
+            sound = pygame.sndarray.make_sound(waves)
+            self.sounds['game_over'] = sound
+        except Exception as e:
+            print(f"创建游戏结束音效失败: {e}")
+            # 创建一个简单的默认音效
+            self.sounds['game_over'] = None
     
     def play_shoot(self):
         """播放射击音效"""
