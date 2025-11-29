@@ -30,13 +30,18 @@ class Ship(Sprite):
         self.moving_up = False
         self.moving_down = False
         
+        # 无敌状态相关
+        self.invincible = False
+        self.invincible_timer = 0
+        self.invincible_duration = 60  # 60帧 = 1秒（假设60FPS）
+        
     def center_ship(self):
         """让飞船在屏幕上居中"""
         self.center = self.screen_rect.centerx
         self.centery = self.screen_rect.bottom - self.rect.height // 2
         
     def update(self):
-        """根据移动标志调整飞船的位置"""
+        """根据移动标志调整飞船的位置，并处理无敌时间"""
         # 更新飞船的center值，而不是rect
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.center += self.ai_settings.ship_speed_factor
@@ -51,6 +56,23 @@ class Ship(Sprite):
         self.rect.centerx = self.center
         self.rect.centery = self.centery
         
+        # 处理无敌时间
+        if self.invincible:
+            self.invincible_timer -= 1
+            if self.invincible_timer <= 0:
+                self.invincible = False
+    
+    def make_invincible(self):
+        """让飞船进入无敌状态"""
+        self.invincible = True
+        self.invincible_timer = self.invincible_duration
+    
     def blitme(self):
-        """在指定位置绘制飞船"""
+        """在指定位置绘制飞船，无敌时闪烁显示"""
+        if self.invincible:
+            # 无敌时闪烁效果（每5帧闪烁一次）
+            if self.invincible_timer % 10 < 5:
+                self.screen.blit(self.image, self.rect)
+        else:
+            self.screen.blit(self.image, self.rect)
         self.screen.blit(self.image, self.rect)
