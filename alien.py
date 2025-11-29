@@ -1,6 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
 import random
+from resource_manager import get_image_path
 
 
 class Alien(Sprite):
@@ -13,7 +14,7 @@ class Alien(Sprite):
         self.ai_settings = ai_settings
         
         # 加载外星人图像，并设置其rect属性
-        self.image = pygame.image.load('images/alien.bmp')
+        self.image = pygame.image.load(get_image_path('alien.bmp'))
         self.rect = self.image.get_rect()
         
         # 随机在屏幕顶端位置

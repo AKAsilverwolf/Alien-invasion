@@ -1,4 +1,5 @@
 import pygame
+from resource_manager import get_image_path
 
 class Settings:
     """存储《外星人入侵》的所有设置的类"""
@@ -12,7 +13,7 @@ class Settings:
         
         # 背景图片
         try:
-            self.background_image = pygame.image.load('images/background.bmp')
+            self.background_image = pygame.image.load(get_image_path('background.bmp'))
         except:
             self.background_image = None
         

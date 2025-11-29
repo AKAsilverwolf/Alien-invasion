@@ -1,14 +1,14 @@
 import json
 import os
+from resource_manager import get_data_path
 
 class Leaderboard:
     """管理游戏排行榜的类"""
     
     def __init__(self, filename="leaderboard.json"):
         """初始化排行榜"""
-        # 获取当前脚本所在目录，构建绝对路径
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.filename = os.path.join(current_dir, filename)
+        # 使用资源管理器获取数据文件路径
+        self.filename = get_data_path(filename)
         self.leaders = []
         self.load_leaderboard()
     

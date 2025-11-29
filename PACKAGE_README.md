@@ -16,7 +16,7 @@ python build_game.py
 # 安装PyInstaller（如果未安装）
 pip install pyinstaller
 
-# 执行打包命令
+# 执行打包命令（包含背景音乐）
 pyinstaller --onefile --windowed --add-data "images;images" --add-data "sounds;sounds" --add-data "leaderboard.json;." --name "AlienInvasion" alien_invasion.py
 ```
 
@@ -36,8 +36,9 @@ Alien-invasion/
 
 - **🎯 单文件打包**: 生成一个独立的 .exe 文件
 - **🖼️ 无控制台窗口**: 游戏运行时不显示黑色控制台
-- **📦 包含所有资源**: 自动包含图像、音效、数据文件
+- **📦 包含所有资源**: 自动包含图像、音效、背景音乐、数据文件
 - **🚀 即装即用**: 无需安装Python、Pygame等依赖
+- **🎵 完整音频**: 包含背景音乐和所有音效
 
 ## 🎮 运行游戏
 

@@ -26,7 +26,19 @@ def main():
         'alien_invasion.py',
         'images',
         'sounds',
-        'leaderboard.json'
+        'leaderboard.json',
+        'sound_manager.py',
+        'game_functions.py',
+        'ship.py',
+        'alien.py',
+        'bullet.py',
+        'settings.py',
+        'game_stats.py',
+        'scoreboard.py',
+        'button.py',
+        'leaderboard.py',
+        'name_input.py',
+        'resource_manager.py'  # 新增资源管理器
     ]
     
     missing_files = []
@@ -39,6 +51,13 @@ def main():
         return False
     
     print("✅ 所有必要文件检查通过")
+    
+    # 检查BGM文件
+    bgm_path = os.path.join('sounds', 'BGM.mp3')
+    if not os.path.exists(bgm_path):
+        print(f"⚠️ 警告: 背景音乐文件未找到: {bgm_path}")
+    else:
+        print("✅ 背景音乐文件检查通过")
     
     # 清理之前的打包
     if os.path.exists('dist'):

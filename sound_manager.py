@@ -2,6 +2,7 @@ import pygame
 import os
 import numpy as np
 from pygame import sndarray
+from resource_manager import get_sound_path
 
 class SoundManager:
     """管理游戏音效的类"""
@@ -24,50 +25,71 @@ class SoundManager:
     def create_sounds(self):
         """创建或加载音效"""
         if not self.enabled:
+            print("音频系统未启用，跳过音效加载")
             return
             
         try:
             # 尝试加载外部音效文件
             self.load_sound_files()
-            print("音效加载成功")
+            print("🎵 音效加载成功!")
         except Exception as e:
-            print(f"加载音效文件时出错: {e}")
-            print("尝试生成程序化音效...")
+            print(f"❌ 加载音效文件时出错: {e}")
+            print("🔧 尝试生成程序化音效...")
             try:
                 # 如果加载失败，则创建程序化音效
                 self.create_programmed_sounds()
-                print("程序化音效创建成功")
+                print("🔧 程序化音效创建成功")
             except Exception as e2:
-                print(f"创建音效时出错: {e2}")
+                print(f"💥 创建音效时出错: {e2}")
                 self.enabled = False
     
     def load_sound_files(self):
         """加载外部音效文件"""
-        # 获取当前文件所在目录的父目录，然后添加sounds文件夹
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        sounds_dir = os.path.join(current_dir, 'sounds')
+        print("开始加载音效文件...")
         
         # 加载射击音效
-        shoot_path = os.path.join(sounds_dir, 'shoot.wav')
-        if os.path.exists(shoot_path):
-            self.sounds['shoot'] = pygame.mixer.Sound(shoot_path)
-            print(f"加载射击音效: {shoot_path}")
-        else:
-            raise FileNotFoundError(f"射击音效文件未找到: {shoot_path}")
+        try:
+            shoot_path = get_sound_path('shoot.wav')
+            print(f"尝试加载射击音效: {shoot_path}")
+            if os.path.exists(shoot_path):
+                self.sounds['shoot'] = pygame.mixer.Sound(shoot_path)
+                print(f"✅ 射击音效加载成功")
+            else:
+                print(f"❌ 射击音效文件不存在: {shoot_path}")
+                raise FileNotFoundError(f"射击音效文件未找到: {shoot_path}")
+        except Exception as e:
+            print(f"❌ 射击音效加载失败: {e}")
+            raise
         
         # 加载爆炸音效
-        explosion_path = os.path.join(sounds_dir, 'explosion.wav')
-        if os.path.exists(explosion_path):
-            self.sounds['explosion'] = pygame.mixer.Sound(explosion_path)
-            print(f"加载爆炸音效: {explosion_path}")
-        else:
-            raise FileNotFoundError(f"爆炸音效文件未找到: {explosion_path}")
+        try:
+            explosion_path = get_sound_path('explosion.wav')
+            print(f"尝试加载爆炸音效: {explosion_path}")
+            if os.path.exists(explosion_path):
+                self.sounds['explosion'] = pygame.mixer.Sound(explosion_path)
+                print(f"✅ 爆炸音效加载成功")
+            else:
+                print(f"❌ 爆炸音效文件不存在: {explosion_path}")
+                raise FileNotFoundError(f"爆炸音效文件未找到: {explosion_path}")
+        except Exception as e:
+            print(f"❌ 爆炸音效加载失败: {e}")
+            raise
         
         # 生成游戏结束音效（因为没有对应的文件）
-        self.create_game_over_sound()
+        try:
+            self.create_game_over_sound()
+            print(f"✅ 游戏结束音效创建成功")
+        except Exception as e:
+            print(f"❌ 游戏结束音效创建失败: {e}")
         
         # 加载背景音乐
-        self.load_background_music()
+        try:
+            self.load_background_music()
+            print(f"✅ 背景音乐加载完成")
+        except Exception as e:
+            print(f"❌ 背景音乐加载失败: {e}")
+        
+        print("所有音效加载完成!")
 
     def create_programmed_sounds(self):
         """创建程序化音效（备用方案）"""
@@ -171,8 +193,7 @@ class SoundManager:
             return
             
         try:
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            bgm_path = os.path.join(current_dir, 'sounds', 'BGM.mp3')
+            bgm_path = get_sound_path('BGM.mp3')
             
             if os.path.exists(bgm_path):
                 pygame.mixer.music.load(bgm_path)
