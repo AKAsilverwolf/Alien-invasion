@@ -20,6 +20,18 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets, sound_manage
         fire_bullet(ai_settings, screen, ship, bullets, sound_manager)
     elif event.key == pygame.K_q:
         sys.exit()
+    # 背景音乐控制
+    elif event.key == pygame.K_m:
+        # 切换背景音乐播放/暂停
+        try:
+            if pygame.mixer.music.get_busy():
+                sound_manager.pause_background_music()
+                print("背景音乐已暂停")
+            else:
+                sound_manager.unpause_background_music()
+                print("背景音乐已恢复")
+        except:
+            pass
         
 
 def check_keyup_events(event, ship):

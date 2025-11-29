@@ -70,6 +70,9 @@ def run_game():
     # 创建音效管理器
     sound_manager = SoundManager()
     
+    # 开始播放背景音乐
+    sound_manager.play_background_music(loops=-1)  # 无限循环
+    
     # 创建排行榜
     leaderboard = Leaderboard()
     
@@ -89,12 +92,19 @@ def run_game():
     while True:
         # 检查游戏结束并需要输入名字的情况
         if not stats.game_active and stats.score > 0 and leaderboard.is_high_score(stats.score):
+            # 暂停背景音乐
+            sound_manager.pause_background_music()
+            
             result = show_name_input_screen(screen, ai_settings, leaderboard, stats.score, stats.level)
             if not result:  # 用户点击了关闭窗口
                 pygame.quit()
                 sys.exit()
+            
             # 重置分数，避免重复显示输入界面
             stats.score = 0
+            
+            # 恢复背景音乐
+            sound_manager.unpause_background_music()
         
         # 处理游戏事件
         for event in pygame.event.get():
@@ -107,6 +117,9 @@ def run_game():
                     was_game_active = stats.game_active
                     stats.game_active = False  # 暂停游戏
                     
+                    # 暂停背景音乐
+                    sound_manager.pause_background_music()
+                    
                     result = show_leaderboard_screen(screen, ai_settings, stats, sb, ship, aliens, bullets, play_button, leaderboard)
                     if not result:  # 用户点击了关闭窗口
                         pygame.quit()
@@ -114,6 +127,9 @@ def run_game():
                     
                     # 恢复游戏状态
                     stats.game_active = was_game_active
+                    
+                    # 恢复背景音乐
+                    sound_manager.unpause_background_music()
                 else:
                     gf.check_keydown_events(event, ai_settings, screen, ship, bullets, sound_manager)
             elif event.type == pygame.MOUSEBUTTONDOWN:

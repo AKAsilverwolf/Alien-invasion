@@ -9,11 +9,13 @@ class SoundManager:
     def __init__(self):
         """初始化音效管理器"""
         self.enabled = True
+        self.music_enabled = True  # 背景音乐开关
         try:
             pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
         except:
             print("警告：无法初始化音频系统")
             self.enabled = False
+            self.music_enabled = False
             return
             
         self.sounds = {}
@@ -63,6 +65,9 @@ class SoundManager:
         
         # 生成游戏结束音效（因为没有对应的文件）
         self.create_game_over_sound()
+        
+        # 加载背景音乐
+        self.load_background_music()
 
     def create_programmed_sounds(self):
         """创建程序化音效（备用方案）"""
@@ -160,7 +165,67 @@ class SoundManager:
         if self.enabled and 'game_over' in self.sounds:
             self.sounds['game_over'].play()
     
+    def load_background_music(self):
+        """加载背景音乐"""
+        if not self.enabled:
+            return
+            
+        try:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            bgm_path = os.path.join(current_dir, 'sounds', 'BGM.mp3')
+            
+            if os.path.exists(bgm_path):
+                pygame.mixer.music.load(bgm_path)
+                print(f"加载背景音乐: {bgm_path}")
+            else:
+                print(f"背景音乐文件未找到: {bgm_path}")
+                self.music_enabled = False
+        except Exception as e:
+            print(f"加载背景音乐时出错: {e}")
+            self.music_enabled = False
+    
+    def play_background_music(self, loops=-1):
+        """播放背景音乐
+        
+        Args:
+            loops: 循环次数，-1表示无限循环
+        """
+        if self.enabled and self.music_enabled:
+            try:
+                pygame.mixer.music.play(loops)
+                print("背景音乐开始播放")
+            except Exception as e:
+                print(f"播放背景音乐时出错: {e}")
+    
+    def stop_background_music(self):
+        """停止背景音乐"""
+        if self.enabled and self.music_enabled:
+            pygame.mixer.music.stop()
+            print("背景音乐停止")
+    
+    def pause_background_music(self):
+        """暂停背景音乐"""
+        if self.enabled and self.music_enabled:
+            pygame.mixer.music.pause()
+            print("背景音乐暂停")
+    
+    def unpause_background_music(self):
+        """恢复背景音乐播放"""
+        if self.enabled and self.music_enabled:
+            pygame.mixer.music.unpause()
+            print("背景音乐恢复")
+    
+    def set_music_volume(self, volume):
+        """设置背景音乐音量
+        
+        Args:
+            volume: 音量值 (0.0 到 1.0)
+        """
+        if self.enabled and self.music_enabled:
+            pygame.mixer.music.set_volume(max(0.0, min(1.0, volume)))
+    
     def stop_all(self):
         """停止所有音效"""
         if self.enabled:
             pygame.mixer.stop()
+            pygame.mixer.music.stop()
