@@ -232,6 +232,104 @@ This project is for learning and teaching purposes only.
 ### Contact
 If you have questions or suggestions, welcome feedback and communication.
 
+## 📦 Game Packaging
+
+The game provides multiple packaging tools to convert the Python game into standalone executable files that can run without installing Python.
+
+### 🚀 Quick Packaging (Recommended)
+
+#### For Windows Users - Use Batch Scripts
+```bash
+# Complete packaging (with audio fixes)
+build_sound_fixed.bat
+
+# Quick packaging (for testing)
+quick_build.bat
+```
+
+#### For All Platforms - Use Python Script
+```bash
+python build_game.py
+```
+
+### 📁 Packaging Tools Description
+
+| Packaging Tool | Platform | Features | Recommended Use |
+|----------------|----------|----------|----------------|
+| `build_sound_fixed.bat` | Windows | Complete audio fixes, detailed Chinese prompts | **Final Release** |
+| `build_game.py` | Cross-platform | Python implementation, detailed error handling | **Main Tool** |
+| `quick_build.bat` | Windows | Fast and simple, suitable for testing | **Development Testing** |
+| `create_portable.bat` | Windows | Creates portable version with launcher | **User Distribution** |
+
+### 🎯 Create Portable Version
+
+After packaging is complete, you can create a complete portable version:
+```bash
+# Create portable version (includes all resource files)
+create_portable.bat
+```
+
+Portable version features:
+- 📁 Complete game folder
+- 🎮 Friendly launcher script
+- 📋 Detailed game instructions
+- 📤 Can be directly shared with friends
+
+### ✅ Packaging Requirements
+
+**Required Files:**
+- `alien_invasion.py` - Main program
+- `images/` - Image resource folder
+- `sounds/` - Audio resource folder
+- `leaderboard.json` - Leaderboard data file
+
+**Environment Requirements:**
+- Python 3.8+
+- PyInstaller (`pip install pyinstaller`)
+
+### 🔍 Packaging Verification
+
+After packaging is complete, please test the following functions:
+- ✅ Game starts normally
+- ✅ Images display correctly
+- ✅ Sound effects play normally
+- ✅ Background music can be controlled
+- ✅ Leaderboard data saves
+- ✅ Control keys work properly
+
+### 📊 Packaging File Description
+
+**Packaging Results:**
+```
+dist/
+└── AlienInvasion.exe    # Main program (about 10-20MB)
+```
+
+**Portable Version Structure:**
+```
+AlienInvasion_Portable/
+├── AlienInvasion.exe     # Main program
+├── Start Game.bat       # Launcher script
+├── Game Instructions.txt # Game instructions
+├── images/              # Image resources
+└── sounds/              # Audio resources
+```
+
+### 🐛 Packaging Troubleshooting
+
+1. **Audio Missing**: Use `build_sound_fixed.bat` instead of manual packaging
+2. **Image Display Issues**: Ensure `images/` folder exists and is complete
+3. **Startup Failure**: Check if `leaderboard.json` file is included
+4. **Font Display Issues**: Confirm system has Chinese font support
+
+### 📄 Detailed Documentation
+
+For more packaging information, please refer to:
+- 📋 [Complete Package Guide](COMPLETE_PACKAGE_GUIDE.md)
+- 🚀 [Quick Build Guide](QUICK_BUILD.md)
+- 📦 [Package Documentation](PACKAGE_README.md)
+- 📁 [File Guide](FILE_GUIDE.md)
+
 ---
 
 **🎮 Enjoy the game and wish you high scores!**

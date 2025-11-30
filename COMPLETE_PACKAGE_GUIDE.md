@@ -32,6 +32,63 @@ AlienInvasion_Portable/
 └── 游戏说明.txt               📖 使用说明
 ```
 
+## 🛠️ 打包工具详解
+
+### 📋 工具对比表
+
+| 工具名称 | 文件类型 | 适用平台 | 特点 | 推荐场景 |
+|---------|---------|---------|------|---------|
+| **build_sound_fixed.bat** | 批处理脚本 | Windows | 🔧 音效修复版、详细中文提示 | **最终发布** |
+| **build_game.py** | Python脚本 | 跨平台 | 🐍 Python实现、详细错误处理 | **推荐主力工具** |
+| **quick_build.bat** | 批处理脚本 | Windows | ⚡ 快速简洁、适合测试 | **开发测试** |
+| **create_portable.bat** | 批处理脚本 | Windows | 📦 创建便携版、包含启动脚本 | **用户分发** |
+
+### 🔧 工具使用指南
+
+#### 1️⃣ build_sound_fixed.bat（推荐）
+```bash
+# Windows用户首选
+build_sound_fixed.bat
+```
+**特点：**
+- 包含完整的音效修复配置
+- 详细的中文进度提示
+- 自动资源路径处理
+- 生成 `dist/AlienInvasion.exe`
+
+#### 2️⃣ build_game.py（跨平台）
+```bash
+# 所有平台可用
+python build_game.py
+```
+**特点：**
+- 跨平台兼容（Windows/macOS/Linux）
+- Python实现，易于理解和修改
+- 详细的错误处理和日志
+- 自动清理旧文件
+
+#### 3️⃣ quick_build.bat（快速测试）
+```bash
+# 开发时快速测试
+quick_build.bat
+```
+**特点：**
+- 简化输出，快速打包
+- 适合开发过程中的频繁测试
+- 生成 `dist/alien_invasion.exe`
+
+#### 4️⃣ create_portable.bat（便携版）
+```bash
+# 先打包再创建便携版
+build_sound_fixed.bat
+create_portable.bat
+```
+**特点：**
+- 创建完整的可分发版本
+- 包含友好的启动脚本
+- 自动生成使用说明
+- 生成 `AlienInvasion_Portable/` 文件夹
+
 ## 🚀 创建完整便携版
 
 ### 方法一：自动创建（推荐）

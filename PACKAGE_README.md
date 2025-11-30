@@ -6,12 +6,25 @@
 
 ## 🚀 快速打包
 
-### 方法一：运行自动打包脚本（推荐）
+### 🎯 方法一：Windows批处理脚本（推荐）
 ```bash
+# 完整打包（音效修复版）
+build_sound_fixed.bat
+
+# 快速打包（开发测试）
+quick_build.bat
+
+# 创建便携版
+create_portable.bat
+```
+
+### 🐍 方法二：Python脚本（跨平台）
+```bash
+# 跨平台打包脚本
 python build_game.py
 ```
 
-### 方法二：手动使用PyInstaller
+### 🔧 方法三：手动使用PyInstaller
 ```bash
 # 安装PyInstaller（如果未安装）
 pip install pyinstaller
@@ -19,6 +32,15 @@ pip install pyinstaller
 # 执行打包命令（包含背景音乐）
 pyinstaller --onefile --windowed --add-data "images;images" --add-data "sounds;sounds" --add-data "leaderboard.json;." --name "AlienInvasion" alien_invasion.py
 ```
+
+### 📋 工具选择建议
+
+| 使用场景 | 推荐工具 | 平台支持 | 特点 |
+|---------|---------|---------|------|
+| **最终发布** | `build_sound_fixed.bat` | Windows | 音效修复、中文提示 |
+| **开发测试** | `quick_build.bat` | Windows | 快速简洁 |
+| **跨平台开发** | `build_game.py` | Windows/macOS/Linux | Python实现、详细错误处理 |
+| **用户分发** | `create_portable.bat` | Windows | 便携版、启动脚本 |
 
 ## 📁 打包结果
 

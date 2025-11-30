@@ -9,7 +9,7 @@ if exist dist rmdir /s /q dist
 if exist build rmdir /s /q build
 
 echo 📝 使用修复版主程序打包...
-pyinstaller --onefile --windowed --add-data "images;images" --add-data "sounds;sounds" --add-data "leaderboard.json;." --name "AlienInvasion" alien_invasion_fixed.py
+pyinstaller --onefile --windowed --add-data "images;images" --add-data "sounds;sounds" --add-data "leaderboard.json;." --name "AlienInvasion" alien_invasion.py
 
 echo.
 echo 🎉 打包完成!

@@ -10,115 +10,77 @@ import subprocess
 import shutil
 
 def main():
-    print("🚀 开始打包外星人入侵游戏...")
+    """主打包函数"""
+    print("🔧 开始打包外星人入侵游戏...")
+    print("=" * 50)
     
-    # 检查PyInstaller是否安装
-    try:
-        import PyInstaller
-        print("✅ PyInstaller已安装")
-    except ImportError:
-        print("❌ PyInstaller未安装，正在安装...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
-        print("✅ PyInstaller安装完成")
+    # 清理旧文件
+    print("📦 清理旧文件...")
+    if os.path.exists("dist"):
+        shutil.rmtree("dist")
+    if os.path.exists("build"):
+        shutil.rmtree("build")
     
-    # 检查必要文件
-    required_files = [
-        'alien_invasion.py',
-        'images',
-        'sounds',
-        'leaderboard.json',
-        'sound_manager.py',
-        'game_functions.py',
-        'ship.py',
-        'alien.py',
-        'bullet.py',
-        'settings.py',
-        'game_stats.py',
-        'scoreboard.py',
-        'button.py',
-        'leaderboard.py',
-        'name_input.py',
-        'resource_manager.py'  # 新增资源管理器
-    ]
-    
-    missing_files = []
-    for file in required_files:
-        if not os.path.exists(file):
-            missing_files.append(file)
-    
-    if missing_files:
-        print(f"❌ 缺少必要文件: {missing_files}")
+    # 检查主程序文件
+    if not os.path.exists("alien_invasion.py"):
+        print("❌ 错误: 未找到主程序文件 alien_invasion.py")
         return False
     
-    print("✅ 所有必要文件检查通过")
-    
-    # 检查BGM文件
-    bgm_path = os.path.join('sounds', 'BGM.mp3')
-    if not os.path.exists(bgm_path):
-        print(f"⚠️ 警告: 背景音乐文件未找到: {bgm_path}")
-    else:
-        print("✅ 背景音乐文件检查通过")
-    
-    # 清理之前的打包
-    if os.path.exists('dist'):
-        shutil.rmtree('dist')
-        print("🗑️ 清理旧的打包文件")
-    
-    if os.path.exists('build'):
-        shutil.rmtree('build')
-        print("🗑️ 清理构建缓存")
+    # 检查资源文件夹
+    required_dirs = ["images", "sounds"]
+    for dir_name in required_dirs:
+        if not os.path.exists(dir_name):
+            print(f"❌ 错误: 未找到 {dir_name} 文件夹")
+            return False
     
     # 打包命令
     cmd = [
-        'pyinstaller',
-        '--onefile',           # 打包为单个exe文件
-        '--windowed',          # 无控制台窗口
-        '--add-data', 'images;images',  # 包含图像文件
-        '--add-data', 'sounds;sounds',  # 包含音效文件
-        '--add-data', 'leaderboard.json;.',  # 包含排行榜数据
-        '--name', 'AlienInvasion',  # 可执行文件名
-        '--clean',             # 清理临时文件
-        'alien_invasion.py'
+        "pyinstaller",
+        "--onefile",
+        "--windowed",
+        "--add-data", "images;images",
+        "--add-data", "sounds;sounds",
+        "--add-data", "leaderboard.json;.",
+        "--name", "AlienInvasion",
+        "alien_invasion.py"
     ]
     
-    print(f"📦 执行打包命令: {' '.join(cmd)}")
-    
+    print("📝 执行打包命令...")
     try:
-        subprocess.check_call(cmd)
-        print("✅ 打包完成！")
+        result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8')
         
-        # 检查生成的文件
-        exe_path = os.path.join('dist', 'AlienInvasion.exe')
-        if os.path.exists(exe_path):
-            size_mb = os.path.getsize(exe_path) / (1024 * 1024)
-            print(f"📁 生成的可执行文件: {exe_path}")
-            print(f"📏 文件大小: {size_mb:.1f} MB")
-            print("🎮 你现在可以运行 AlienInvasion.exe 来玩游戏了！")
-            return True
+        if result.returncode == 0:
+            print("✅ 打包成功!")
+            
+            # 检查生成的文件
+            exe_path = "dist/AlienInvasion.exe"
+            if os.path.exists(exe_path):
+                file_size = os.path.getsize(exe_path)
+                print(f"📁 文件位置: {exe_path}")
+                print(f"📏 文件大小: {file_size:,} 字节 ({file_size/1024/1024:.1f} MB)")
+                return True
+            else:
+                print("❌ 未找到生成的可执行文件")
+                return False
         else:
-            print("❌ 打包失败，未找到可执行文件")
+            print("❌ 打包失败!")
+            print("错误信息:")
+            print(result.stderr)
             return False
             
-    except subprocess.CalledProcessError as e:
-        print(f"❌ 打包失败: {e}")
-        return False
     except Exception as e:
-        print(f"❌ 发生错误: {e}")
+        print(f"❌ 打包过程中出现异常: {e}")
         return False
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     success = main()
     if success:
-        print("\n🎉 游戏打包成功！")
-        print("💡 提示:")
-        print("   - 可执行文件位于 dist/AlienInvasion.exe")
-        print("   - 可以将此文件复制到其他Windows电脑运行")
-        print("   - 不需要安装Python或Pygame即可运行")
+        print("\n🎉 游戏打包完成!")
+        print("💡 运行方法:")
+        print("   1. 进入 dist 文件夹")
+        print("   2. 双击 AlienInvasion.exe")
+        print("\n📤 或者运行 create_portable.bat 创建便携版")
     else:
-        print("\n💔 打包失败，请检查错误信息")
-        print("💡 解决方案:")
-        print("   - 确保所有必要文件都在正确位置")
-        print("   - 检查Python和依赖包是否正确安装")
-        print("   - 尝试手动运行: pyinstaller --onefile --windowed alien_invasion.py")
+        print("\n💥 打包失败，请检查错误信息")
     
-    input("\n按任意键退出...")
+    input("\n按回车键退出...")

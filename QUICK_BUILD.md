@@ -16,13 +16,27 @@
 ```bash
 cd "c:/Users/l/Desktop/py实验/Alien-invasion"
 
-# 方法一：使用自动脚本（推荐）
+# 🎯 推荐方法（Windows）
+build_sound_fixed.bat
+
+# 🚀 快速测试（Windows）
+quick_build.bat
+
+# 🐍 跨平台方法
 python build_game.py
 
-# 方法二：手动打包
-pip install pyinstaller
-pyinstaller --onefile --windowed --add-data "images;images" --add-data "sounds;sounds" --add-data "leaderboard.json;." --name "AlienInvasion" alien_invasion.py
+# 📦 创建便携版
+create_portable.bat
 ```
+
+### 🛠️ 工具选择指南
+
+| 使用场景 | 推荐工具 | 命令 |
+|---------|---------|------|
+| **最终发布版本** | `build_sound_fixed.bat` | Windows一键完整打包 |
+| **快速开发测试** | `quick_build.bat` | 快速生成测试版本 |
+| **跨平台开发** | `build_game.py` | Python脚本，支持所有平台 |
+| **用户分发** | `create_portable.bat` | 创建完整便携版 |
 
 ### 📁 包含的资源文件
 
